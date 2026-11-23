@@ -9,6 +9,7 @@ from pathlib import Path
 from alembic import command
 from alembic.config import Config
 from argon2 import PasswordHasher
+from dotenv import dotenv_values, unset_key
 from pydantic import BaseModel, EmailStr, Field, SecretStr
 from sqlalchemy import text
 
@@ -54,25 +55,30 @@ def initialize(settings: Settings, values: dict) -> bool:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--bootstrap-file", type=Path)
+    parser.add_argument("--env-file", type=Path)
     parser.add_argument("--stdin", action="store_true")
     args = parser.parse_args()
     try:
-        settings = Settings()
-        command.upgrade(Config("alembic.ini"), "head")
-        if args.bootstrap_file:
-            values = json.loads(args.bootstrap_file.read_text())
-        elif args.stdin:
+        settings = Settings(_env_file=args.env_file or ".env")
+        migrations = Config("alembic.ini")
+        migrations.attributes["database_url"] = settings.database_url
+        command.upgrade(migrations, "head")
+        if args.stdin:
             values = json.load(sys.stdin)
         else:
+            runtime = {**dotenv_values(args.env_file or ".env", interpolate=False), **os.environ}
             values = {
-                "email": os.environ.pop("INITIAL_EMAIL", ""),
-                "display_name": os.environ.pop("INITIAL_DISPLAY_NAME", ""),
-                "password": os.environ.pop("INITIAL_PASSWORD", ""),
+                "email": runtime.get("INITIAL_EMAIL", ""),
+                "display_name": runtime.get("INITIAL_DISPLAY_NAME", ""),
+                "password": runtime.get("INITIAL_PASSWORD", ""),
             }
         created = initialize(settings, values)
-        if args.bootstrap_file:
-            args.bootstrap_file.unlink()
+        path = args.env_file or Path(".env")
+        if not args.stdin and path.is_file():
+            path.chmod(0o600)
+            for key in ("INITIAL_EMAIL", "INITIAL_DISPLAY_NAME", "INITIAL_PASSWORD"):
+                if key in dotenv_values(path, interpolate=False):
+                    unset_key(path, key)
         print("Office initialized." if created else "Office already initialized; no changes.")
     except Exception:
         # Validation/driver exceptions can contain credentials. Never print their values.

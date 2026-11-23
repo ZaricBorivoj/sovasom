@@ -5,8 +5,7 @@ services:
     environment:
       POSTGRES_DB: office
       POSTGRES_USER: office
-      POSTGRES_PASSWORD_FILE: /run/secrets/database_password
-    secrets: [database_password]
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in .env}
     volumes: [postgres_data:/var/lib/postgresql]
     networks: [data]
     healthcheck:
@@ -21,9 +20,8 @@ services:
       target: runtime
     restart: unless-stopped
     environment:
-      DATABASE_URL_FILE: /run/secrets/database_url
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in .env}
       PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:?Set PUBLIC_ORIGIN to the public HTTPS origin}
-    secrets: [database_url]
     networks: [data, edge]
     depends_on:
       db: {condition: service_healthy}
@@ -51,15 +49,10 @@ services:
       dockerfile: Dockerfile.backend
       target: test
     environment:
-      TEST_DATABASE_URL: postgresql+psycopg://office:synthetic-tests-only@db/office
+      TEST_DATABASE_URL: ${TEST_DATABASE_URL:-postgresql+psycopg://office:synthetic-tests-only@db/office}
     networks: [data]
     depends_on:
       db: {condition: service_healthy}
-secrets:
-  database_password:
-    file: ${OFFICE_SECRETS_DIR:?Set OFFICE_SECRETS_DIR outside the checkout}/database_password
-  database_url:
-    file: ${OFFICE_SECRETS_DIR:?Set OFFICE_SECRETS_DIR outside the checkout}/database_url
 volumes:
   postgres_data:
   caddy_data:

@@ -46,7 +46,7 @@ def office(database_url):
     )
     assert result.returncode == 0, result.stderr
     now = [datetime(2026, 11, 23, 9, 0, tzinfo=UTC)]
-    app = create_app(Settings(database_url=database_url), clock=lambda: now[0])
+    app = create_app(Settings(_env_file=None, database_url=database_url), clock=lambda: now[0])
     with TestClient(app, base_url="https://testserver") as client:
         yield client, now, app.state.sessions
 

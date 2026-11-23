@@ -9,6 +9,9 @@ import tempfile
 import uuid
 from pathlib import Path
 
+from dotenv import dotenv_values, set_key
+from sqlalchemy import URL
+
 
 def free_port():
     with socket.socket() as sock:
@@ -20,70 +23,71 @@ def main():
     with tempfile.TemporaryDirectory(prefix="office-tests-") as directory:
         root = Path(directory)
         root.chmod(0o700)
-        for name, value in {
-            "database_password": "synthetic-tests-only",
-            "database_url": "postgresql+psycopg://office:synthetic-tests-only@db/office",
-            "bootstrap.json": json.dumps(
-                {
-                    "email": "colleague@example.com",
-                    "display_name": "Test colleague",
-                    "password": "synthetic password only",
-                }
-            ),
-        }.items():
-            (root / name).write_text(value)
-            # Compose file secrets must be readable by the non-root backend UID.
-            # The private parent directory restricts host access.
-            (root / name).chmod(0o444 if name != "bootstrap.json" else 0o600)
         https_port = free_port()
-        env = {
-            **os.environ,
-            "COMPOSE_PROJECT_NAME": "office-test-" + uuid.uuid4().hex[:12],
-            "OFFICE_SECRETS_DIR": directory,
+        config = root / ".env"
+        values = {
+            "DATABASE_PASSWORD": "synthetic:p@ss/$word#${UNCHANGED}",
             "SITE_ADDRESS": "localhost",
             "PUBLIC_ORIGIN": f"https://localhost:{https_port}",
             "HTTP_PORT": str(free_port()),
             "HTTPS_PORT": str(https_port),
+            "INITIAL_EMAIL": "colleague@example.com",
+            "INITIAL_DISPLAY_NAME": "Test colleague",
+            "INITIAL_PASSWORD": "synthetic password only",
+        }
+        for key, value in values.items():
+            set_key(config, key, value)
+        config.chmod(0o600)
+        env = {
+            **{key: value for key, value in os.environ.items() if key not in values},
+            "COMPOSE_PROJECT_NAME": "office-test-" + uuid.uuid4().hex[:12],
+            "COMPOSE_ENV_FILES": str(config),
             "E2E_BASE_URL": f"https://localhost:{https_port}",
             "OFFICE_TEST_STACK": "1",
+            "TEST_DATABASE_URL": URL.create(
+                "postgresql+psycopg",
+                username="office",
+                host="db",
+                database="office",
+                password=values["DATABASE_PASSWORD"],
+            ).render_as_string(hide_password=False),
         }
 
         def run(*args, **kwargs):
             return subprocess.run(args, env=env, check=True, **kwargs)
 
         try:
-            run(
-                sys.executable, "scripts/setup.py", "--bootstrap-file", str(root / "bootstrap.json")
+            run(sys.executable, "scripts/setup.py", "--env-file", str(config))
+            runtime = dotenv_values(config, interpolate=False)
+            assert not any(key.startswith("INITIAL_") for key in runtime)
+            assert runtime["DATABASE_PASSWORD"] == values["DATABASE_PASSWORD"]
+            # Inspect the rendered service configuration without printing secret values.
+            rendered = json.loads(
+                run(
+                    "docker",
+                    "compose",
+                    "config",
+                    "--format",
+                    "json",
+                    capture_output=True,
+                    text=True,
+                ).stdout
             )
-            assert not (root / "bootstrap.json").exists()
+            for name, service in rendered["services"].items():
+                environment = service.get("environment", {})
+                assert not any(key.startswith("INITIAL_") for key in environment)
+                if name == "web":
+                    assert "DATABASE_PASSWORD" not in environment
+                    assert "POSTGRES_PASSWORD" not in environment
             # Rerun with different inputs; browser login below proves original credentials survive.
-            (root / "bootstrap.json").write_text(
-                json.dumps(
-                    {
-                        "email": "changed@example.com",
-                        "display_name": "Changed",
-                        "password": "changed synthetic password",
-                    }
-                )
-            )
-            run(
-                "docker",
-                "compose",
-                "run",
-                "--rm",
-                "-T",
-                "backend",
-                "uv",
-                "run",
-                "--frozen",
-                "--no-dev",
-                "python",
-                "-m",
-                "office.setup",
-                "--stdin",
-                input=(root / "bootstrap.json").read_bytes(),
-            )
-            (root / "bootstrap.json").unlink()
+            for key, value in {
+                "INITIAL_EMAIL": "changed@example.com",
+                "INITIAL_DISPLAY_NAME": "Changed",
+                "INITIAL_PASSWORD": "changed synthetic password",
+            }.items():
+                set_key(config, key, value)
+            run(sys.executable, "scripts/setup.py", "--env-file", str(config))
+            assert not any(key.startswith("INITIAL_") for key in dotenv_values(config))
             run("docker", "compose", "--profile", "test", "run", "--build", "--rm", "backend-tests")
             run("npm", "run", "test:e2e", "--", "--grep-invert", "service restart", cwd="frontend")
             env["PERSISTED_SESSION_FILE"] = str(root / "browser-session")

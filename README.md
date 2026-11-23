@@ -4,29 +4,50 @@ A private office home for coffee and bakery trips. This first slice supports run
 
 The modular FastAPI application lives in `backend/office` (accounts/access first), with SQLAlchemy and schema-only Alembic migrations. `frontend/src/design-system` owns Postcard Club tokens and accessible primitives; React 19/Vite builds the SPA. Caddy serves the build and the same-origin `/api` proxy. PostgreSQL has persistent storage and no published port. A worker will use the backend image when durable work is introduced.
 
-## Start an office
+## Start locally
 
-Install the pinned tools in `.tool-versions` / `.nvmrc`, Docker with Compose, then run `uv sync --frozen` and `npm ci --prefix frontend`. Dependency versions were checked against the official registries on 23 November 2026; see [version sources](docs/dependency-versions.md).
-
-Copy `.env.example` to `.env` and set the public HTTPS origin, hostname and an absolute secrets directory outside this checkout. Create that directory with mode `0700` and these files:
-
-- `database_password`: a generated database password.
-- `database_url`: `postgresql+psycopg://office:<URL-encoded-password>@db/office`.
-- `bootstrap.json`: runtime JSON with `email`, `display_name` and `password` (12–1024 characters).
-
-Keep bootstrap input mode `0600`. The two database files must be readable by container UID 10001: with Compose file mounts, mode `0444` within the private `0700` directory works on the verified Docker Desktop path. Retain database credentials in your password manager. Only PostgreSQL receives the password file and only FastAPI receives the connection URL; neither is embedded in an image. Verify equivalent ownership/readability on another host.
-
-Run one preparation command from the repository root:
+Start Docker Desktop (or Docker Engine with Compose on Linux), then from the repository root:
 
 ```sh
-uv run --frozen python scripts/setup.py --bootstrap-file /absolute/private/path/bootstrap.json
+cp .env.example .env
+chmod 600 .env
 ```
 
-It builds the images, starts PostgreSQL, applies migrations, atomically creates the initial account, membership, administrator and menu-maintainer grants, removes the consumed bootstrap file, then starts the application. The operator chooses the initial identity; nothing seeds a person or password. `INITIAL_EMAIL`, `INITIAL_DISPLAY_NAME` and `INITIAL_PASSWORD` are also supported when `--bootstrap-file` is omitted; clear these from the invoking shell/secret store after success. Prefer the file path for automatic removal. Bootstrap input never enters container configuration or build arguments. Setup errors deliberately omit input values.
+Edit `.env` and set `DATABASE_PASSWORD`, `INITIAL_EMAIL`, `INITIAL_DISPLAY_NAME` and `INITIAL_PASSWORD` (12–1024 characters). The example already supplies local HTTPS addresses and ports. Use single quotes around literal passwords, especially values containing `$`, `#`, spaces or URL punctuation; the backend constructs and escapes the database connection URL automatically. Do not use shell variable substitutions inside `.env` values. Existing exported environment variables override file values.
 
-Reruns leave account credentials, membership and grants unchanged, even with changed inputs or removed grants. Without bootstrap input an initialized installation is still a no-op. Bootstrap is not an administrator recovery/reset command; explicit recovery is delivered by ticket 03. Initial setup is intended for a new database. Backups and controlled upgrades of existing installations are delivered by later operational tickets; migration rollback must be assessed separately from image rollback.
+Run one preparation command:
 
-For local HTTPS, set `SITE_ADDRESS=localhost`, `PUBLIC_ORIGIN=https://localhost:8443`, `HTTPS_PORT=8443`, `HTTP_PORT=8080`. Caddy uses its local CA; trust that CA locally or accept its certificate for this development instance. Production hostnames use automatic public HTTPS with inbound 80/443. The database volume and Caddy keys survive `docker compose down`; do not use `down --volumes` on an office installation.
+```sh
+uv run --frozen python scripts/setup.py
+```
+
+Open **https://localhost:8443**, accept Caddy's local development certificate (or trust its local CA), and sign in with your initial credentials. Node and Python run inside the application images; the host setup command needs uv and Docker. Install pinned development tools from `.tool-versions` / `.nvmrc` when working on source. Dependency versions and verification sources are recorded in [version sources](docs/dependency-versions.md).
+
+Setup reads `.env` automatically, builds the images, starts PostgreSQL, applies migrations, and atomically creates the initial account, membership, administrator and menu-maintainer grants. After initialization succeeds, it removes the three `INITIAL_*` entries from `.env`, retains runtime configuration, and starts the application. Failed initialization keeps those entries for retry. Reruns leave existing credentials and permissions unchanged, even if new initial values are supplied. Bootstrap is not a recovery/reset command; explicit recovery is delivered by ticket 03.
+
+Later, from the repository root:
+
+```sh
+docker compose stop
+docker compose up -d
+```
+
+Data and Caddy keys persist across restarts and `docker compose down`. Keep volumes when stopping an office installation.
+
+## Deploy with .env
+
+All environments use the same `.env` format. For deployment set `SITE_ADDRESS` to the public hostname, `PUBLIC_ORIGIN` to its HTTPS origin, `HTTP_PORT=80` and `HTTPS_PORT=443`. Caddy manages public certificates when the hostname resolves to the host and inbound 80/443 are reachable. Keep the environment file private, outside source control, and retain a recoverable copy in your password manager. Environment values are accessible to the host's Docker administrators; the file is never included in images or frontend builds.
+
+You can keep the deployment file outside the checkout:
+
+```sh
+uv run --frozen python scripts/setup.py --env-file /absolute/private/path/.env.production
+docker compose --env-file /absolute/private/path/.env.production up -d
+```
+
+Setup restricts the selected file to mode `0600`. Compose explicitly passes the database password only to PostgreSQL and FastAPI. Bootstrap values are sent to the short-lived initializer on stdin and never stored in container configuration. Caddy receives only its hostname. PostgreSQL has no published port.
+
+Existing installations using the old secret-file layout should copy their **existing database password** into `DATABASE_PASSWORD` in the environment file before recreating containers. Changing this value alone does not rotate an initialized PostgreSQL role's password. Reuse the same Compose project name and volumes to retain the database. Backups and controlled upgrades remain part of the later operational tickets.
 
 ## Verify changes
 
@@ -44,7 +65,7 @@ cd ..
 uv run --frozen python scripts/verify-stack.py
 ```
 
-The last command builds an independently named Compose stack, uses only synthetic credentials and private temporary runtime files, runs backend units/integration against new PostgreSQL databases, and runs UI flows in desktop Chromium/Firefox/WebKit and a 390px phone viewport. It verifies changed bootstrap reruns, cookie protection, authorization, CSRF denial, persisted login after reload, expired/revoked sessions, sign-out and persistence through database/application restart. Cleanup removes only that test project's containers and volumes. Direct session mutations in Playwright are gated by this isolated harness; production exposes no test endpoints. CI runs the same commands on Linux with frozen lockfiles.
+The last command builds an independently named Compose stack, uses only synthetic credentials and a private temporary `.env` file, runs backend units/integration against new PostgreSQL databases, and runs UI flows in desktop Chromium/Firefox/WebKit and a 390px phone viewport. It verifies changed bootstrap reruns, cookie protection, authorization, CSRF denial, persisted login after reload, expired/revoked sessions, sign-out and persistence through database/application restart. Cleanup removes only that test project's containers and volumes. Direct session mutations in Playwright are gated by this isolated harness; production exposes no test endpoints. CI runs the same commands on Linux with frozen lockfiles.
 
 For focused backend work, set `TEST_DATABASE_URL` to a disposable PostgreSQL server on which the test user can create databases, then run `uv run --frozen pytest backend/tests/test_auth.py`. Each test creates and drops a uniquely named database; it never resets the configured database. Run all backend tests with `uv run --frozen pytest`.
 

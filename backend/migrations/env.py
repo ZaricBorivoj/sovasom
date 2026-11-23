@@ -6,7 +6,8 @@ from sqlalchemy import create_engine, pool
 
 
 def run_migrations():
-    engine = create_engine(Settings().database_url, poolclass=pool.NullPool, hide_parameters=True)
+    database_url = context.config.attributes.get("database_url") or Settings().database_url
+    engine = create_engine(database_url, poolclass=pool.NullPool, hide_parameters=True)
     with engine.connect() as connection:
         context.configure(connection=connection, target_metadata=Base.metadata)
         with context.begin_transaction():
