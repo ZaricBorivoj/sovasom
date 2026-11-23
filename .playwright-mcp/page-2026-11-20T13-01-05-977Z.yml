@@ -1,0 +1,76 @@
+- generic [active] [ref=f33e1]:
+  - generic [ref=f33e2]: THROWAWAY PROTOTYPE · Sample shops, prices, times and behavior · Nothing is saved
+  - generic [ref=f33e3]:
+    - banner [ref=f33e4]:
+      - generic [ref=f33e5]: the coffee corner ♡
+      - navigation [ref=f33e6]:
+        - generic [ref=f33e7]: Design studio
+        - generic [ref=f33e8]: One office. Good company.
+      - generic [ref=f33e9]:
+        - generic [ref=f33e10]: Private office
+        - generic [ref=f33e11]: NT
+    - main [ref=f33e12]:
+      - generic [ref=f33e13]:
+        - generic [ref=f33e14]:
+          - generic [ref=f33e15]: A little office happiness
+          - heading "Coffee tastes better together." [level=1] [ref=f33e16]
+          - paragraph [ref=f33e17]: See who’s heading out. Add your little pick-me-up.
+        - button "+ Announce a run" [ref=f33e18] [cursor=pointer]
+      - navigation "Prototype flow" [ref=f33e19]:
+        - button "Open runs" [pressed] [ref=f33e20] [cursor=pointer]
+        - button "Choose items" [ref=f33e21] [cursor=pointer]
+        - button "Announce" [ref=f33e22] [cursor=pointer]
+        - button "Runner’s list" [ref=f33e23] [cursor=pointer]
+        - button "Prototype notes" [ref=f33e24] [cursor=pointer]
+      - generic [ref=f33e25]:
+        - generic [ref=f33e26]:
+          - generic [ref=f33e27]: Friday · the coffee corner
+          - article [ref=f33e28]:
+            - generic [ref=f33e29]: ML
+            - generic [ref=f33e30]:
+              - generic [ref=f33e31]:
+                - generic [ref=f33e32]: Mila
+                - generic [ref=f33e33]: Runner
+              - generic [ref=f33e34]:
+                - heading "Friday afternoon · Crumbs of motivation" [level=2] [ref=f33e35]
+                - paragraph [ref=f33e36]: I’m doing both stops. Anyone fancy a little something?
+                - generic [ref=f33e37]: Kiosk Coffee + Morning Bakery
+                - generic [ref=f33e38]:
+                  - generic [ref=f33e39]: Closes in 20 min
+                  - generic [ref=f33e40]: 7 joining
+                - button "Count me in ↗" [ref=f33e41] [cursor=pointer]
+              - paragraph [ref=f33e42]: Ana, Luka + 5 others are in · good taste, team.
+          - article [ref=f33e43]:
+            - generic [ref=f33e44]: LK
+            - generic [ref=f33e45]:
+              - generic [ref=f33e46]:
+                - generic [ref=f33e47]: Luka
+                - generic [ref=f33e48]: Runner
+              - generic [ref=f33e49]:
+                - heading "Friday afternoon · Crumbs of motivation" [level=2] [ref=f33e50]
+                - paragraph [ref=f33e51]: I’m doing both stops. Anyone fancy a little something?
+                - generic [ref=f33e52]: Kiosk Coffee + Morning Bakery
+                - generic [ref=f33e53]:
+                  - generic [ref=f33e54]: Closes in 45 min
+                  - generic [ref=f33e55]: 3 joining
+                - button "I’m in too ↗" [ref=f33e56] [cursor=pointer]
+          - button "+ Tell the office you’re heading out…" [ref=f33e57] [cursor=pointer]
+        - complementary [ref=f33e58]:
+          - text: The usual suspects
+          - heading "A little office ritual." [level=2] [ref=f33e59]
+          - generic "Mila, Luka, Ana and four others" [ref=f33e60]:
+            - generic [ref=f33e61]: ML
+            - generic [ref=f33e62]: LK
+            - generic [ref=f33e63]: AN
+          - paragraph [ref=f33e64]: 18 colleagues.One very well-caffeinated office.
+          - generic [ref=f33e65]:
+            - text: Both stops. Every time.
+            - paragraph [ref=f33e66]: Coffee from Kiosk.Pastries from Morning Bakery.You just choose your favourites.
+      - group [ref=f33e67]:
+        - generic "Prototype state · illustrative, memory only" [ref=f33e68] [cursor=pointer]
+  - generic "Visual direction" [ref=f33e69]:
+    - button "Previous direction" [ref=f33e70] [cursor=pointer]: ←
+    - generic [ref=f33e71]:
+      - text: E · Social · Office lounge
+      - generic [ref=f33e72]: DESIGN EXPLORATION · 4 OF 4
+    - button "Next direction" [ref=f33e73] [cursor=pointer]: →

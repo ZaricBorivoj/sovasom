@@ -1,0 +1,77 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: THROWAWAY PROTOTYPE · Sample shops, prices, times and behavior · Nothing is saved
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - text: office
+        - emphasis [ref=e6]: ritual
+      - navigation [ref=e7]:
+        - generic [ref=e8]: Design studio
+        - generic [ref=e9]: One office. Good company.
+      - generic [ref=e10]:
+        - generic [ref=e11]: Private office
+        - generic [ref=e12]: NT
+    - main [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]: The daily ritual
+          - heading "Good things, brought back." [level=1] [ref=e18]
+          - paragraph [ref=e19]: Coffee, pastries, and a small reason to step away.
+        - button "+ Announce a run" [ref=e20] [cursor=pointer]
+      - navigation "Prototype flow" [ref=e21]:
+        - button "Open runs" [pressed] [ref=e22] [cursor=pointer]
+        - button "Choose items" [ref=e23] [cursor=pointer]
+        - button "Announce" [ref=e24] [cursor=pointer]
+        - button "Runner’s list" [ref=e25] [cursor=pointer]
+        - button "Prototype notes" [ref=e26] [cursor=pointer]
+      - generic [ref=e27]:
+        - article [ref=e29]:
+          - generic [aria-hidden] [ref=e30]:
+            - generic [ref=e31]: ∿ ∿
+            - generic [ref=e32]: ╱╱╱
+          - generic [ref=e33]:
+            - generic [ref=e34]:
+              - text: Mila is making a run
+              - heading "Coffee & something flaky" [level=2] [ref=e35]
+            - generic [ref=e36]: Open
+          - paragraph [ref=e37]: Kiosk Coffee + Morning Bakery
+          - generic [ref=e38]:
+            - generic [ref=e39]: ML
+            - generic [ref=e40]: Requests close at 10:30Sample closing time
+          - generic [ref=e41]:
+            - generic "Mila, Luka, Ana and four others" [ref=e42]:
+              - generic [ref=e43]: ML
+              - generic [ref=e44]: LK
+              - generic [ref=e45]: AN
+            - button "Choose your items ↗" [ref=e46] [cursor=pointer]
+          - paragraph [ref=e47]: 7 colleagues joining
+        - generic [ref=e48]:
+          - article [ref=e49]:
+            - generic [ref=e50]:
+              - generic [ref=e51]:
+                - text: Luka is making a run
+                - heading "An afternoon pick-me-up" [level=2] [ref=e52]
+              - generic [ref=e53]: Open
+            - paragraph [ref=e54]: Kiosk Coffee
+            - generic [ref=e55]:
+              - generic [ref=e56]: LK
+              - generic [ref=e57]: Requests close at 14:00Sample closing time
+            - generic [ref=e58]:
+              - generic "Mila, Luka, Ana and four others" [ref=e59]:
+                - generic [ref=e60]: ML
+                - generic [ref=e61]: LK
+                - generic [ref=e62]: AN
+              - button "Choose your items ↗" [ref=e63] [cursor=pointer]
+            - paragraph [ref=e64]: 3 colleagues joining
+          - complementary [ref=e65]:
+            - text: A little office ritual
+            - paragraph [ref=e66]: Heading out anyway?Make someone’s morning.
+            - button "Announce a run +" [ref=e67] [cursor=pointer]
+      - group [ref=e68]:
+        - generic "Prototype state · illustrative, memory only" [ref=e69] [cursor=pointer]
+  - generic "Visual direction" [ref=e70]:
+    - button "Previous direction" [ref=e71] [cursor=pointer]: ←
+    - generic [ref=e72]:
+      - text: A · Warm café
+      - generic [ref=e73]: DESIGN EXPLORATION · USE ← →
+    - button "Next direction" [ref=e74] [cursor=pointer]: →

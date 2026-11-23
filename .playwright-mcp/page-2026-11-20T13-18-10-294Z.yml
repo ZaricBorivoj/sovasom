@@ -1,0 +1,75 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: THROWAWAY PROTOTYPE · Sample shops, prices, times and behavior · Nothing is saved
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]: out & about ✳
+      - navigation [ref=e6]:
+        - generic [ref=e7]: Design studio
+        - generic [ref=e8]: One office. Good company.
+      - generic [ref=e9]:
+        - generic [ref=e10]: Private office
+        - generic [ref=e11]: NT
+    - main [ref=e12]:
+      - generic [ref=e14]:
+        - generic [ref=e15]: A little office happiness
+        - heading "Good things come in runs." [level=1] [ref=e16]
+        - paragraph [ref=e17]: Two stops. One office. Excellent taste.
+      - navigation "Prototype flow" [ref=e18]:
+        - button "Office runs" [pressed] [ref=e19] [cursor=pointer]
+        - button "Choose items" [ref=e20] [cursor=pointer]
+        - button "Announce" [ref=e21] [cursor=pointer]
+        - button "Runner’s list" [ref=e22] [cursor=pointer]
+        - button "Prototype notes" [ref=e23] [cursor=pointer]
+      - generic [ref=e24]:
+        - article "Active run" [ref=e25]:
+          - generic [ref=e26]:
+            - generic [ref=e27]: The office’s one active run
+            - generic [ref=e28]: Open
+          - generic [aria-hidden] [ref=e29]: ☕ ✳
+          - generic [ref=e30]:
+            - generic [ref=e31]: From Mila, with caffeine
+            - generic [ref=e32]: 15 MINTO JOIN
+          - heading "Friday afternoon · Crumbs of motivation" [level=2] [ref=e34]
+          - paragraph [ref=e35]: Kiosk Coffee + Morning Bakery
+          - generic [ref=e36]:
+            - generic "Mila, Luka, Ana and four others" [ref=e37]:
+              - generic [ref=e38]: ML
+              - generic [ref=e39]: LK
+              - generic [ref=e40]: AN
+            - generic [ref=e41]: 7 colleagues joining
+          - button "Yes please! Choose items ↗" [ref=e42] [cursor=pointer]
+        - complementary [ref=e43]:
+          - generic [ref=e44]:
+            - heading "One run. Lots of happy colleagues." [level=3] [ref=e45]: One run.Lots of happy colleagues.
+            - generic [aria-hidden] [ref=e46]: ♡
+          - paragraph [ref=e47]: Every run visits the coffee shop and the bakery.
+          - paragraph [ref=e48]: There’s already a run on the go. Join this one — the next can start when it’s finished.
+          - button "A run is already active" [disabled] [ref=e49]
+      - region "Past runs" [ref=e50]:
+        - generic [ref=e51]:
+          - heading "Good runs, good memories." [level=2] [ref=e52]
+          - generic [aria-hidden] [ref=e53]: ↶
+        - paragraph [ref=e54]: Past runs · The little trips that made the office’s day.
+        - generic [ref=e55]:
+          - article [ref=e56]:
+            - generic [ref=e57]:
+              - generic [ref=e58]: Yesterday · 14:30
+              - generic [ref=e59]: Completed
+            - heading "Thursday afternoon · Crumbs of motivation" [level=3] [ref=e60]
+            - paragraph [ref=e61]: Luka brought back the good stuff for 6 colleagues.
+            - generic [ref=e62]: Kiosk Coffee + Morning Bakery
+          - article [ref=e63]:
+            - generic [ref=e64]:
+              - generic [ref=e65]: Yesterday · 09:15
+              - generic [ref=e66]: Completed
+            - heading "Thursday morning · Grounds for optimism" [level=3] [ref=e67]
+            - paragraph [ref=e68]: Ana brought back the good stuff for 9 colleagues.
+            - generic [ref=e69]: Kiosk Coffee + Morning Bakery
+      - group [ref=e70]:
+        - generic "Prototype state · illustrative, memory only" [ref=e71] [cursor=pointer]
+      - complementary "Prototype scenarios" [ref=e72]:
+        - text: PROTOTYPE SCENARIOS · resets sample data
+        - link "One active run" [ref=e73] [cursor=pointer]:
+          - /url: "?variant=C"
+        - link "No active run / try announcing" [ref=e74] [cursor=pointer]:
+          - /url: "?variant=C&demo=empty"

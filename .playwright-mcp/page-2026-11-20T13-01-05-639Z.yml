@@ -1,0 +1,63 @@
+- generic [active] [ref=f30e1]:
+  - generic [ref=f30e2]: THROWAWAY PROTOTYPE · Sample shops, prices, times and behavior · Nothing is saved
+  - generic [ref=f30e3]:
+    - banner [ref=f30e4]:
+      - generic [ref=f30e5]:
+        - text: office
+        - emphasis [ref=f30e6]: ritual
+      - navigation [ref=f30e7]:
+        - generic [ref=f30e8]: Design studio
+        - generic [ref=f30e9]: One office. Good company.
+      - generic [ref=f30e10]:
+        - generic [ref=f30e11]: Private office
+        - generic [ref=f30e12]: NT
+    - main [ref=f30e13]:
+      - generic [ref=f30e14]:
+        - generic [ref=f30e15]:
+          - generic [ref=f30e16]: The daily ritual
+          - heading "A little trip. A lovely haul." [level=1] [ref=f30e17]
+          - paragraph [ref=f30e18]: Fresh coffee. Flaky pastries. Very happy colleagues.
+        - button "+ Announce a run" [ref=f30e19] [cursor=pointer]
+      - navigation "Prototype flow" [ref=f30e20]:
+        - button "Open runs" [pressed] [ref=f30e21] [cursor=pointer]
+        - button "Choose items" [ref=f30e22] [cursor=pointer]
+        - button "Announce" [ref=f30e23] [cursor=pointer]
+        - button "Runner’s list" [ref=f30e24] [cursor=pointer]
+        - button "Prototype notes" [ref=f30e25] [cursor=pointer]
+      - generic [ref=f30e26]:
+        - article [ref=f30e27]:
+          - generic [ref=f30e28]: On the counter today · Mila’s run
+          - generic [aria-hidden] [ref=f30e29]: ∿ ∿
+          - heading "Friday afternoon · Crumbs of motivation" [level=2] [ref=f30e30]
+          - generic [ref=f30e31]: Kiosk Coffee + Morning Bakery
+          - generic [ref=f30e32]: 20 min to join
+          - button "A coffee? A pastry? Count me in ↗" [ref=f30e33] [cursor=pointer]
+          - generic [ref=f30e34]: 7 colleagues are already in
+        - generic [ref=f30e35]:
+          - generic [ref=f30e36]:
+            - generic [ref=f30e37]:
+              - generic [ref=f30e38]: The office receipt
+              - generic [aria-hidden] [ref=f30e39]: ✳
+            - article [ref=f30e40]:
+              - generic [ref=f30e41]:
+                - generic [ref=f30e42]: Luka’s run
+                - generic [ref=f30e43]: Closes in 45 min
+              - heading "Friday afternoon · Crumbs of motivation" [level=3] [ref=f30e44]
+              - generic [ref=f30e45]: Kiosk Coffee + Morning Bakery
+              - button "Choose your items ↗" [ref=f30e46] [cursor=pointer]
+            - generic [ref=f30e47]:
+              - heading "Two stops. Plenty of good things." [level=3] [ref=f30e48]
+              - paragraph [ref=f30e49]: Every run visits the coffee shop and the bakery. Just choose what you fancy.
+            - paragraph [ref=f30e50]: No payment faff here. Settle up outside the app.
+          - complementary [ref=f30e51]:
+            - text: Your turn to bring the good stuff?
+            - paragraph [ref=f30e52]: Pick how many minutes the office has to join.We’ll take care of the name.
+            - button "I’m heading out +" [ref=f30e53] [cursor=pointer]
+      - group [ref=f30e54]:
+        - generic "Prototype state · illustrative, memory only" [ref=f30e55] [cursor=pointer]
+  - generic "Visual direction" [ref=f30e56]:
+    - button "Previous direction" [ref=f30e57] [cursor=pointer]: ←
+    - generic [ref=f30e58]:
+      - text: A · Café · The counter
+      - generic [ref=f30e59]: DESIGN EXPLORATION · 1 OF 4
+    - button "Next direction" [ref=f30e60] [cursor=pointer]: →

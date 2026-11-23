@@ -1,0 +1,51 @@
+- generic [active] [ref=f27e1]:
+  - generic [ref=f27e2]: THROWAWAY PROTOTYPE · Sample shops, prices, times and behavior · Nothing is saved
+  - generic [ref=f27e3]:
+    - banner [ref=f27e4]:
+      - generic [ref=f27e5]:
+        - text: the daily
+        - emphasis [ref=f27e6]: grind.
+      - generic [ref=f27e7]:
+        - generic [ref=f27e8]: Private office
+        - generic [ref=f27e9]: NT
+    - main [ref=f27e10]:
+      - generic [ref=f27e11]:
+        - generic [ref=f27e12]:
+          - generic [ref=f27e13]: The daily ritual
+          - heading "The Daily Grind." [level=1] [ref=f27e14]
+          - paragraph [ref=f27e15]: Today’s office rituals, hot off the press.
+        - button "+ Announce a run" [ref=f27e16] [cursor=pointer]
+      - navigation "Prototype flow" [ref=f27e17]:
+        - button "Open runs" [pressed] [ref=f27e18] [cursor=pointer]
+        - button "Choose items" [ref=f27e19] [cursor=pointer]
+        - button "Announce" [ref=f27e20] [cursor=pointer]
+        - button "Runner’s list" [ref=f27e21] [cursor=pointer]
+        - button "Prototype notes" [ref=f27e22] [cursor=pointer]
+      - generic [ref=f27e24]:
+        - article [ref=f27e25]:
+          - generic [ref=f27e26]: "01"
+          - generic [ref=f27e27]:
+            - text: Mila is heading out · 7 colleagues joining
+            - heading "Friday afternoon · Crumbs of motivation" [level=2] [ref=f27e28]
+            - paragraph [ref=f27e29]: Kiosk Coffee + Morning Bakery
+            - generic [ref=f27e30]: Closes in 20 minutes
+          - button "Choose your items ↗" [ref=f27e32] [cursor=pointer]
+        - article [ref=f27e33]:
+          - generic [ref=f27e34]: "02"
+          - generic [ref=f27e35]:
+            - text: Luka is heading out · 3 colleagues joining
+            - heading "Friday afternoon · Crumbs of motivation" [level=2] [ref=f27e36]
+            - paragraph [ref=f27e37]: Kiosk Coffee + Morning Bakery
+            - generic [ref=f27e38]: Closes in 45 minutes
+          - button "Choose your items ↗" [ref=f27e40] [cursor=pointer]
+        - generic [ref=f27e41]:
+          - text: A note from the office
+          - paragraph [ref=f27e42]: Every run makes both stops. A coffee, a pastry, or a little of each — your choice.
+      - group [ref=f27e43]:
+        - generic "Prototype state · illustrative, memory only" [ref=f27e44] [cursor=pointer]
+  - generic "Visual direction" [ref=f27e45]:
+    - button "Previous direction" [ref=f27e46] [cursor=pointer]: ←
+    - generic [ref=f27e47]:
+      - text: D · Café · The daily journal
+      - generic [ref=f27e48]: DESIGN EXPLORATION · 2 OF 4
+    - button "Next direction" [ref=f27e49] [cursor=pointer]: →
