@@ -14,3 +14,49 @@ export const SignedOut: StoryObj<typeof App> = {
     };
   },
 };
+
+function stubFetch(handler: typeof fetch) {
+  const original = globalThis.fetch;
+  globalThis.fetch = handler;
+  return () => {
+    globalThis.fetch = original;
+  };
+}
+
+export const Loading: StoryObj<typeof App> = {
+  beforeEach: () => stubFetch(() => new Promise(() => {})),
+};
+export const Home: StoryObj<typeof App> = {
+  beforeEach: () =>
+    stubFetch(async (input) =>
+      Response.json(
+        String(input).endsWith('/home')
+          ? {
+              active_run: null,
+              history: [],
+            }
+          : {
+              account: {
+                id: 'synthetic-app',
+                email: 'colleague@example.com',
+                display_name: 'Test colleague',
+                is_administrator: true,
+                is_menu_maintainer: true,
+              },
+              csrf_token: 'synthetic-csrf',
+            },
+      ),
+    ),
+};
+export const AccessLost: StoryObj<typeof App> = {
+  beforeEach: () =>
+    stubFetch(async () =>
+      Response.json({ detail: 'Office access unavailable' }, { status: 403 }),
+    ),
+};
+export const ConnectionError: StoryObj<typeof App> = {
+  beforeEach: () =>
+    stubFetch(async () => {
+      throw new TypeError('Network unavailable');
+    }),
+};

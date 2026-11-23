@@ -55,6 +55,23 @@ test('sign-out stories show pending and error feedback', async ({ page }) => {
   }
 });
 
+test('the app renders its authentication, access and connection states', async ({
+  page,
+}) => {
+  for (const [story, heading] of [
+    ['signed-out', 'A little office happiness.'],
+    ['loading', 'Opening the office…'],
+    ['home', 'Office runs'],
+    ['access-lost', 'Office access unavailable'],
+    ['connection-error', 'Couldn’t reach the office'],
+  ]) {
+    await page.goto(`/iframe.html?id=office-app--${story}&viewMode=story`);
+    await expect(
+      page.getByRole('heading', { name: heading, exact: true }),
+    ).toBeVisible();
+  }
+});
+
 for (const story of [
   'office-signin--default',
   'office-home--empty',

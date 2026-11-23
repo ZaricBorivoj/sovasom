@@ -74,17 +74,24 @@ def cookie(response: Response, name: str, value: str, max_age: int):
     )
 
 
+def session_csrf(request: Request, response: Response, session: LoginSession, db: Session) -> str:
+    token = request.cookies.get(CSRF_COOKIE, "")
+    if not secrets.compare_digest(session.csrf_hash, digest(token)):
+        # A cross-site top-level CSRF navigation can replace the Strict cookie
+        # while omitting the session. Repair its binding on authenticated return.
+        token = secrets.token_urlsafe(32)
+        session.csrf_hash = digest(token)
+        db.commit()
+        remaining = int((session.expires_at - request.app.state.now()).total_seconds())
+        cookie(response, CSRF_COOKIE, token, max(0, remaining))
+    return token
+
+
 @router.get("/auth/csrf")
 def csrf(request: Request, response: Response, db: Session = Depends(database)):
-    existing = request.cookies.get(CSRF_COOKIE, "")
     session = db.get(LoginSession, digest(request.cookies.get(SESSION_COOKIE, "")))
-    if (
-        session
-        and not session.revoked_at
-        and session.expires_at > request.app.state.now()
-        and secrets.compare_digest(session.csrf_hash, digest(existing))
-    ):
-        return {"csrf_token": existing}
+    if session and not session.revoked_at and session.expires_at > request.app.state.now():
+        return {"csrf_token": session_csrf(request, response, session, db)}
     token = secrets.token_urlsafe(32)
     cookie(response, CSRF_COOKIE, token, 3600)
     return {"csrf_token": token}
@@ -133,9 +140,13 @@ def login(
 
 @router.get("/auth/session")
 def session_info(
-    request: Request, account: Account = Depends(office_member), db: Session = Depends(database)
+    request: Request,
+    response: Response,
+    account: Account = Depends(office_member),
+    session: LoginSession = Depends(current_session),
+    db: Session = Depends(database),
 ):
-    return profile(account, request.cookies.get(CSRF_COOKIE, ""), db)
+    return profile(account, session_csrf(request, response, session, db), db)
 
 
 @router.post("/auth/logout", status_code=204)

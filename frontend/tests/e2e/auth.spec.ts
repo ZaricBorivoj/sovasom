@@ -81,6 +81,30 @@ test('CSRF denial leaves the colleague signed in', async ({ page }) => {
   ).toBeVisible();
 });
 
+test('a cross-site CSRF navigation cannot prevent sign-out', async ({
+  page,
+}) => {
+  await signIn(page);
+  const target = new URL('/api/auth/csrf', page.url()).href;
+  await page.route('https://outside.example/', (route) =>
+    route.fulfill({
+      contentType: 'text/html',
+      body: `<a href="${target}">Continue</a>`,
+    }),
+  );
+  await page.goto('https://outside.example/');
+  await page.getByRole('link', { name: 'Continue' }).click();
+  await page.waitForURL(target);
+  await page.goto('/');
+  await expect(
+    page.getByRole('heading', { name: 'Office runs', exact: true }),
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Sign out', exact: true }).click();
+  await expect(
+    page.getByRole('button', { name: 'Sign in', exact: true }),
+  ).toBeVisible();
+});
+
 for (const state of ['expired', 'revoked']) {
   test(`${state} sessions lose access on reload`, async ({ page }) => {
     test.skip(
