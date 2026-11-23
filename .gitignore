@@ -1,0 +1,88 @@
+.playwright-mcp/
+# Python bytecode and compiled extensions
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Python environments and package artifacts
+.venv/
+venv/
+env/
+ENV/
+__pypackages__/
+*.egg-info/
+*.egg
+.eggs/
+pip-wheel-metadata/
+
+# Python tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+.hypothesis/
+.tox/
+.nox/
+.uv-cache/
+
+# Node dependencies and package manager caches
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/install-state.gz
+.yarn/build-state.yml
+.pnp.*
+
+# Build output and frontend tooling caches
+dist/
+dist-ssr/
+build/
+.vite/
+.cache/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+storybook-static/
+
+# Test reports and coverage (keep committed snapshots and visual baselines)
+.coverage
+.coverage.*
+coverage.xml
+coverage/
+htmlcov/
+.nyc_output/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Local environment files (keep example configuration)
+.env
+.env.*
+!.env.example
+!.env.*.example
+!.env.sample
+!.env.*.sample
+!.env.template
+!.env.*.template
+
+# Logs, local databases, and process files
+*.log
+*.pid
+*.pid.lock
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+*.sqlite3-journal
+
+# Operating system and editor artifacts
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+*.swp
+*.swo
+*~

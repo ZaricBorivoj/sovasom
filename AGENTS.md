@@ -18,8 +18,8 @@ Use a single shared domain context across the monorepo. Before exploring or chan
 
 ## Application stack
 
-- Backend: FastAPI.
-- Frontend: React 19 single-page application built with Vite.
+- Backend: FastAPI with SQLAlchemy as the ORM and Alembic for database migrations.
+- Frontend: React single-page application built with Vite.
 - Database: PostgreSQL running in a Docker container.
 
 ## Development tools
@@ -27,6 +27,16 @@ Use a single shared domain context across the monorepo. Before exploring or chan
 - Use Prettier for frontend formatting, ESLint for frontend linting, and a `check-types` script for TypeScript type checking.
 - Configure the pre-commit hook to run all three checks and block the commit if any check fails. Prettier and ESLint may target staged frontend files; `check-types` must check the frontend project.
 - Run these checks before completing frontend work, even when no commit is being made.
+- Use uv for backend dependency management, Python installation, and virtual environment management. Run backend commands through `uv run`.
+- Use Ruff for backend static analysis and linting. Run `uv run ruff check` before completing backend work and in the pre-commit hook; failures must block the commit.
+
+## Versions and dependencies
+
+- Use the latest stable Python release and the latest stable versions of tools and dependencies when setting up the projects or adding or upgrading dependencies. Verify current releases against official sources at that time.
+- Pin the exact Python version in `.python-version` and declare the supported Python version in `pyproject.toml`.
+- Pin all direct runtime and development dependencies to exact versions in both projects: use `==` in backend dependency declarations and exact versions without ranges in frontend package manifests.
+- Commit `uv.lock` and the frontend package manager's lockfile to pin transitive dependencies. Update manifests and lockfiles together, and use frozen lockfile installs in CI.
+- Pin development tools alongside other development dependencies; record exact versions for tools installed outside the project manifests in checked-in tool configuration.
 
 ## Frontend design system
 
