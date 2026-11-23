@@ -1,0 +1,20 @@
+# Repository-scoped MCP servers. See docs/mcp.md for prerequisites and credentials.
+[mcp_servers.playwright]
+command = "npx"
+args = ["--yes", "@playwright/mcp@0.0.86", "--browser", "chrome", "--isolated"]
+startup_timeout_sec = 120
+
+[mcp_servers.chrome_devtools]
+command = "npx"
+args = ["--yes", "chrome-devtools-mcp@1.13.0", "--isolated", "--headless=false"]
+startup_timeout_sec = 120
+
+[mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp/readonly"
+bearer_token_env_var = "GITHUB_PAT_TOKEN"
+
+[mcp_servers.postman]
+command = "npx"
+args = ["--yes", "@postman/postman-mcp-server@2.15.0"]
+env_vars = ["POSTMAN_API_KEY"]
+startup_timeout_sec = 120

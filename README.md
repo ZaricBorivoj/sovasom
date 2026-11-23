@@ -51,6 +51,8 @@ Existing installations using the old secret-file layout should copy their **exis
 
 ## Verify changes
 
+For repository-scoped Codex browser tools and optional GitHub/Postman connections, see [MCP setup](docs/mcp.md).
+
 ```sh
 uv run --frozen ruff check
 cd frontend

@@ -51,3 +51,11 @@ Maintain Storybook stories for every frontend component, including its relevant 
 - For backend work, add or update unit tests and integration tests for new or changed code, and run the relevant suites. Cover business rules, validation, error cases, and database interactions where applicable.
 - Update tests and component stories alongside behavior changes. Review visual differences before accepting updated regression baselines.
 - Cover all user-facing workflows end-to-end with Playwright, exercising the frontend, backend, and database together. Maintain these tests alongside workflow changes; the build server runs end-to-end and other long-running tests, so local completion does not require running those suites.
+
+## Browser verification
+
+- After changing user-facing behavior, exercise the affected workflows in the running local application with Playwright MCP. When investigating a UI bug, attempt browser reproduction before changing code and repeat the scenario after the fix.
+- Use Chrome DevTools MCP when console, network, or performance inspection helps explain a failure. Each browser tool uses its own visible, isolated browser; reproduce the scenario in the browser being inspected.
+- Use a dedicated local test account and synthetic data. Preserve existing personal data and exercise destructive workflows only on disposable test data. Start a separate local stack if the current installation cannot provide that isolation.
+- Report the workflows exercised, results, and any verification blocked by unavailable tools, credentials, or runtime dependencies. Documentation-only and CI-only changes require their relevant checks instead of browser verification.
+- For MCP setup, credentials, or connection troubleshooting, read `docs/mcp.md`.
