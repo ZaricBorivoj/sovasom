@@ -1,0 +1,34 @@
+[project]
+name = "office-ordering"
+version = "0.1.0"
+requires-python = ">=3.15,<3.16"
+dependencies = [
+  "alembic==1.20.1",
+  "argon2-cffi==25.1.0",
+  "email-validator==2.4.0",
+  "fastapi==0.165.0",
+  "psycopg[binary]==3.3.9",
+  "pydantic-settings==2.16.3",
+  "sqlalchemy==2.1.9",
+  "uvicorn==0.54.0",
+]
+
+[dependency-groups]
+dev = ["httpx==0.28.1", "pytest==9.2.0", "ruff==0.17.6"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["backend"]
+testpaths = ["backend/tests"]
+
+[tool.ruff]
+target-version = "py315"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+"backend/office/accounts/routes.py" = ["B008"]

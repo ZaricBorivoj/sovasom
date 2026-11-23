@@ -1,0 +1,44 @@
+name: Verify office application
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: astral-sh/setup-uv@v10.4.0
+        with:
+          version: '0.13.9'
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: npm ci
+        working-directory: frontend
+      - run: uv run --frozen ruff check
+      - run: npm run format:check && npm run lint && npm run check-types && npm test && npm run build && npm run build-storybook
+        working-directory: frontend
+      - name: Storybook interactions and reviewed visual baselines
+        run: >-
+          docker run --rm --ipc=host
+          -e CI=1 -e STORYBOOK_STATIC=1
+          -v "$PWD:/work" -w /work/frontend
+          mcr.microsoft.com/playwright:v1.65.1-noble
+          node node_modules/@playwright/test/cli.js test --config playwright.components.config.ts
+      - run: npx playwright install --with-deps chromium firefox webkit
+        working-directory: frontend
+      - name: Runtime setup, PostgreSQL integration, HTTPS browser flows and restart
+        run: uv run --frozen python scripts/verify-stack.py
+      - uses: actions/upload-artifact@v7.0.2
+        if: failure()
+        with:
+          name: synthetic-browser-failures
+          path: |
+            frontend/playwright-report
+            frontend/test-results
+          retention-days: 7

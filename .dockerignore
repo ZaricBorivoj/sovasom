@@ -1,0 +1,12 @@
+.git
+.scratch
+.playwright-mcp
+.venv
+**/node_modules
+**/dist
+**/storybook-static
+**/test-results
+**/playwright-report
+**/__pycache__
+.env*
+**/*.log
