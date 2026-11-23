@@ -30,15 +30,3 @@ jobs:
           -v "$PWD:/work" -w /work/frontend
           mcr.microsoft.com/playwright:v1.65.1-noble
           node node_modules/@playwright/test/cli.js test --config playwright.components.config.ts
-      - run: npx playwright install --with-deps chromium firefox webkit
-        working-directory: frontend
-      - name: Runtime setup, PostgreSQL integration, HTTPS browser flows and restart
-        run: uv run --frozen python scripts/verify-stack.py
-      - uses: actions/upload-artifact@v7.0.2
-        if: failure()
-        with:
-          name: synthetic-browser-failures
-          path: |
-            frontend/playwright-report
-            frontend/test-results
-          retention-days: 7

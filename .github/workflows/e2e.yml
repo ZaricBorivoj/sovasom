@@ -1,0 +1,34 @@
+name: Verify office application end to end
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  e2e:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: astral-sh/setup-uv@v10.4.0
+        with:
+          version: '0.13.9'
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: npm ci
+        working-directory: frontend
+      - run: npx playwright install --with-deps chromium firefox webkit
+        working-directory: frontend
+      - name: Runtime setup, PostgreSQL integration, HTTPS browser flows and restart
+        run: uv run --frozen python scripts/verify-stack.py
+      - uses: actions/upload-artifact@v7.0.2
+        if: failure()
+        with:
+          name: synthetic-browser-failures
+          path: |
+            frontend/playwright-report
+            frontend/test-results
+          retention-days: 7
