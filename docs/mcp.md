@@ -8,14 +8,22 @@ Use the project Node toolchain from `.nvmrc`, with `node` and `npx` available to
 
 ## Credentials
 
-Provide these variables in the environment of the Codex process using your local secret manager or shell configuration:
+For Codex CLI onboarding, fill in these two values in the ignored `.env` copied from `.env.example`:
 
 | Variable           | Purpose                                                                                                                                                                                                 |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `GITHUB_PAT_TOKEN` | Personal GitHub token for the repositories you want to inspect. Prefer a fine-grained token restricted to this repository and the read permissions needed for code, issues, pull requests, and Actions. |
 | `POSTMAN_API_KEY`  | Personal Postman API key for the workspaces you intend to access.                                                                                                                                       |
 
-Store actual values outside the repository. Shell exports must be present before launching Codex; a desktop launch may need environment configuration through its launcher. Codex does not automatically source the application's `.env` for these servers. The Postman configuration explicitly forwards its key to the local server.
+Then run from the repository root:
+
+```sh
+uv run --frozen python scripts/onboard.py
+```
+
+The script reads only the two MCP tokens without shell expansion and writes safely quoted exports in one marked `.zshrc` block. Other shell settings are preserved. Reruns update that block in place, including after token rotation, without duplicating it. Missing, empty, or example tokens stop onboarding before the shell file changes. `.env` and the written shell file are restricted to owner read/write; both contain the tokens as plain text. Keep real values in ignored `.env`, never in `.env.example`.
+
+Open a new terminal and launch `codex` from this checkout. The script honors `ZDOTDIR` and supports `--env-file` and `--zshrc` for alternate paths. It configures the CLI shell environment; desktop launches need their own launcher environment. Codex does not automatically source the application's `.env`. The Postman configuration explicitly forwards its key to the local server.
 
 GitHub uses its hosted [read-only endpoint](https://github.com/github/github-mcp-server/blob/main/docs/server-configuration.md), which filters out write tools even if the token has broader permissions. The hosted server's deployment version is managed by GitHub. Token setup follows [GitHub's Codex guide](https://github.com/github/github-mcp-server/blob/main/docs/installation-guides/install-codex.md).
 

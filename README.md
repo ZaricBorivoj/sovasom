@@ -49,9 +49,17 @@ Setup restricts the selected file to mode `0600`. Compose explicitly passes the 
 
 Existing installations using the old secret-file layout should copy their **existing database password** into `DATABASE_PASSWORD` in the environment file before recreating containers. Changing this value alone does not rotate an initialized PostgreSQL role's password. Reuse the same Compose project name and volumes to retain the database. Backups and controlled upgrades remain part of the later operational tickets.
 
-## Verify changes
+## Developer onboarding
 
-For repository-scoped Codex browser tools and optional GitHub/Postman connections, see [MCP setup](docs/mcp.md).
+For developer onboarding, fill in `GITHUB_PAT_TOKEN` and `POSTMAN_API_KEY` in your private `.env`, then run:
+
+```sh
+uv run --frozen python scripts/onboard.py
+```
+
+This installs the two exports in one managed block in your `.zshrc`. Rerunning updates that block without duplicating it. Open a new terminal before launching Codex CLI. Application setup remains the separate command above. See [MCP setup](docs/mcp.md) for details.
+
+## Verify changes
 
 ```sh
 uv run --frozen ruff check
