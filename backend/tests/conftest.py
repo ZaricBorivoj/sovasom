@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 import sys
@@ -32,15 +33,19 @@ def office(database_url):
     from office.config import Settings
 
     result = subprocess.run(
-        [sys.executable, "-m", "office.setup"],
+        [sys.executable, "-m", "office.setup", "--stdin"],
         env={
             **os.environ,
             "DATABASE_URL": database_url,
             "PYTHONPATH": "backend",
-            "INITIAL_EMAIL": "colleague@example.com",
-            "INITIAL_DISPLAY_NAME": "Test colleague",
-            "INITIAL_PASSWORD": "synthetic password only",
         },
+        input=json.dumps(
+            {
+                "email": "colleague@example.com",
+                "display_name": "Test colleague",
+                "password": "synthetic password only",
+            }
+        ),
         capture_output=True,
         text=True,
     )

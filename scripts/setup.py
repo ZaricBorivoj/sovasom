@@ -35,12 +35,16 @@ def main():
     runtime = {key: value for key, value in runtime.items() if key not in initial_keys}
 
     def compose(*command, **kwargs):
-        subprocess.run(
-            ["docker", "compose", "--env-file", str(path), *command],
-            env=runtime,
-            check=True,
-            **kwargs,
-        )
+        try:
+            subprocess.run(
+                ["docker", "compose", "--env-file", str(path), *command],
+                env=runtime,
+                check=True,
+                **kwargs,
+            )
+        except subprocess.CalledProcessError as error:
+            # The failed command already reported its cause; preserve its status.
+            raise SystemExit(error.returncode) from None
 
     compose("build", "backend", "web")
     compose("up", "-d", "--wait", "db")

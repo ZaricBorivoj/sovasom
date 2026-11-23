@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 import sys
@@ -51,6 +52,11 @@ def test_setup_is_atomic_and_reruns_never_change_credentials(database_url, tmp_p
         dotenv_values(secret, interpolate=False)["INITIAL_PASSWORD"] == "a synthetic long password"
     )
     assert "a synthetic long password" not in invalid.stdout + invalid.stderr
+    short = setup("first@example.com", "First colleague", "short123")
+    assert short.returncode == 1
+    assert "INITIAL_PASSWORD must contain 12 to 1024 characters" in short.stderr
+    assert "short123" not in short.stdout + short.stderr
+    assert dotenv_values(secret, interpolate=False)["INITIAL_PASSWORD"] == "short123"
     first = setup("first@example.com", "First colleague", "a synthetic long password")
     assert first.returncode == 0, first.stderr
     assert dotenv_values(secret) == {"DATABASE_URL": database_url}
@@ -73,3 +79,30 @@ def test_setup_is_atomic_and_reruns_never_change_credentials(database_url, tmp_p
     assert response.json()["account"]["is_administrator"] is True
     assert response.json()["account"]["is_menu_maintainer"] is True
     assert client.get("/api/office/home").status_code == 200
+
+
+def test_stdin_bootstrap_ignores_and_preserves_ambient_dotenv(database_url, tmp_path):
+    repository = Path(__file__).resolve().parents[2]
+    (tmp_path / "alembic.ini").write_text(
+        f"[alembic]\nscript_location = {repository}/backend/migrations\n"
+        f"prepend_sys_path = {repository}/backend\n"
+    )
+    ambient = tmp_path / ".env"
+    original = "PUBLIC_ORIGIN=http://invalid.example.com\nINITIAL_PASSWORD='do not consume'\n"
+    ambient.write_text(original)
+    result = subprocess.run(
+        [sys.executable, "-m", "office.setup", "--stdin"],
+        env={**os.environ, "DATABASE_URL": database_url, "PYTHONPATH": str(repository / "backend")},
+        input=json.dumps(
+            {
+                "email": "synthetic@example.com",
+                "display_name": "Synthetic",
+                "password": "a synthetic long password",
+            }
+        ),
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stderr
+    assert ambient.read_text() == original

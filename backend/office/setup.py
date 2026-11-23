@@ -10,8 +10,9 @@ from alembic import command
 from alembic.config import Config
 from argon2 import PasswordHasher
 from dotenv import dotenv_values, unset_key
-from pydantic import BaseModel, EmailStr, Field, SecretStr
+from pydantic import BaseModel, EmailStr, Field, SecretStr, ValidationError
 from sqlalchemy import text
+from sqlalchemy.exc import OperationalError
 
 from office.accounts.models import Account, Grant, Installation, Membership
 from office.config import Settings
@@ -59,7 +60,7 @@ def main():
     parser.add_argument("--stdin", action="store_true")
     args = parser.parse_args()
     try:
-        settings = Settings(_env_file=args.env_file or ".env")
+        settings = Settings(_env_file=None if args.stdin else (args.env_file or ".env"))
         migrations = Config("alembic.ini")
         migrations.attributes["database_url"] = settings.database_url
         command.upgrade(migrations, "head")
@@ -80,6 +81,28 @@ def main():
                 if key in dotenv_values(path, interpolate=False):
                     unset_key(path, key)
         print("Office initialized." if created else "Office already initialized; no changes.")
+    except ValidationError as error:
+        # Only report fixed field guidance: validation details may contain secrets.
+        fields = {item["loc"][0] for item in error.errors(include_input=False) if item["loc"]}
+        guidance = {
+            "email": "INITIAL_EMAIL must be a valid email address.",
+            "display_name": "INITIAL_DISPLAY_NAME must contain 1 to 100 characters.",
+            "password": "INITIAL_PASSWORD must contain 12 to 1024 characters.",
+        }
+        messages = [message for field, message in guidance.items() if field in fields]
+        print(
+            "Setup failed: " + (" ".join(messages) or "Check runtime configuration."),
+            file=sys.stderr,
+        )
+        raise SystemExit(1) from None
+    except OperationalError:
+        print(
+            "Setup failed: Cannot connect to PostgreSQL. Check that DATABASE_PASSWORD "
+            "matches the existing database password and PostgreSQL is reachable. "
+            "Changing .env does not reset an existing database password.",
+            file=sys.stderr,
+        )
+        raise SystemExit(1) from None
     except Exception:
         # Validation/driver exceptions can contain credentials. Never print their values.
         print(
