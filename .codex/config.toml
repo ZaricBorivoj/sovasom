@@ -10,8 +10,9 @@ args = ["--yes", "chrome-devtools-mcp@1.13.0", "--isolated", "--headless=false"]
 startup_timeout_sec = 120
 
 [mcp_servers.github]
-url = "https://api.githubcopilot.com/mcp/readonly"
+url = "https://api.githubcopilot.com/mcp/"
 bearer_token_env_var = "GITHUB_PAT_TOKEN"
+http_headers = { "X-MCP-Toolsets" = "default,actions" }
 
 [mcp_servers.postman]
 command = "npx"
