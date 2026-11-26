@@ -87,3 +87,17 @@ Desktop.ini
 *.swp
 *.swo
 *~
+
+# Terraform state, plans and operator-specific configuration
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+*.tfbackend
+infra/foundation/backend.tf
+!*.tfvars.example
+!*.tfbackend.example

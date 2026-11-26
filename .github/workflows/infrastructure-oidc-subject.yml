@@ -1,0 +1,28 @@
+name: Inspect trusted infrastructure OIDC subject
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  subject:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      id-token: write
+    steps:
+      - name: Display only the non-secret subject and audience
+        shell: bash
+        run: |
+          node <<'JS'
+          (async () => {
+            const url = new URL(process.env.ACTIONS_ID_TOKEN_REQUEST_URL);
+            url.searchParams.set('audience', 'sts.amazonaws.com');
+            const response = await fetch(url, {
+              headers: { Authorization: `Bearer ${process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN}` },
+            });
+            if (!response.ok) throw new Error('OIDC request failed');
+            const { value } = await response.json();
+            const claims = JSON.parse(Buffer.from(value.split('.')[1], 'base64url'));
+            console.log(JSON.stringify({ sub: claims.sub, aud: claims.aud }));
+          })().catch(() => { console.error('Unable to inspect OIDC subject'); process.exitCode = 1; });
+          JS

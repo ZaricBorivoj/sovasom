@@ -49,7 +49,22 @@ Setup restricts the selected file to mode `0600`. Compose explicitly passes the 
 
 Existing installations using the old secret-file layout should copy their **existing database password** into `DATABASE_PASSWORD` in the environment file before recreating containers. Changing this value alone does not rotate an initialized PostgreSQL role's password. Reuse the same Compose project name and volumes to retain the database. Backups and controlled upgrades remain part of the later operational tickets.
 
+AWS storage, Terraform bootstrap, GitHub OIDC, DNS and independent operator recovery
+are documented in [the infrastructure runbook](infra/README.md). The retained
+foundation and disposable application use separate states; application teardown
+preserves backup storage and Terraform state history.
+
 ## Developer onboarding
+
+For permanent AWS CLI/Terraform installation and personal IAM-user login, start
+with [local infrastructure setup](infra/local-setup/README.md). It covers macOS,
+Linux/WSL2, corporate certificates, persistent profiles and connecting a fresh
+checkout to the team's existing remote state. Each developer authenticates with
+their own IAM user; only the designated operator bootstraps shared infrastructure.
+
+Corporate proxy users can save their CA settings once with
+`bash scripts/configure-corporate-ca.sh "$HOME/.certs/combined-ca.pem"`;
+new zsh terminals then load them automatically. See the setup guide for details.
 
 For developer onboarding, fill in `GITHUB_PAT_TOKEN` and `POSTMAN_API_KEY` in your private `.env`, then run:
 

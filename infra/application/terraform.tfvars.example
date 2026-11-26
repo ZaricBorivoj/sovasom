@@ -1,0 +1,7 @@
+# Copy to terraform.tfvars and fill in your private deployment configuration.
+aws_profile = "REPLACE_WITH_LOCAL_AWS_PROFILE"
+aws_account_id = "REPLACE_WITH_AWS_ACCOUNT_ID"
+backup_bucket_name = "REPLACE_WITH_BACKUP_BUCKET_NAME"
+hosted_zone_id = "REPLACE_WITH_HOSTED_ZONE_ID"
+app_hostname = "REPLACE_WITH_APP_HOSTNAME"
+public_ipv4 = "REPLACE_WITH_PUBLIC_IPV4"

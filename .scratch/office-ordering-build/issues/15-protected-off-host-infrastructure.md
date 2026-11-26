@@ -16,3 +16,12 @@ Parent: [Approved office-ordering specification](../../office-ordering/spec.md)
 ## Implementation and verification context
 
 Use the approved spec and its resolved decision provenance as authority. No product discovery is required. Use existing shared design-system and application test seams where available; add only the pieces this slice needs. All application behavior is server-authorized and PostgreSQL-backed; applicable tests use synthetic isolated data and never notify colleagues. Add component stories and focused units with behavior changes, and run the relevant full-stack Playwright workflows before completion. Record checks that cannot run. Operational slices record equivalent plan/smoke/recovery evidence on isolated resources. Do not alter the parent spec or resolved decision tickets as part of claiming/completing this ticket.
+
+
+## Comments
+
+### Implementation and manual apply handoff
+
+Implemented separate retained-foundation/application Terraform roots, private encrypted/versioned storage, retained bucket guards, scoped OIDC roles, native state locking, DNS management, CI checks and recovery/onboarding documentation. Public examples contain placeholders; actual configuration and deployment verification belong in private local inputs and operator notes.
+
+Automated validation includes Terraform schema checks and synthetic plans, local-state destroy protection, onboarding fixtures, public-example enforcement, linting and commit checks. The operator requested manual infrastructure application. Keep this ticket open until isolated live provisioning/recovery evidence is complete; do not apply infrastructure without a new operator request.

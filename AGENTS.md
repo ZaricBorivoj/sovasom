@@ -30,6 +30,22 @@ Use a single shared domain context across the monorepo. Before exploring or chan
 - Use uv for backend dependency management, Python installation, and virtual environment management. Run backend commands through `uv run`.
 - Use Ruff for backend static analysis and linting. Run `uv run ruff check` before completing backend work and in the pre-commit hook; failures must block the commit.
 
+## Public repository configuration
+
+- Treat every tracked file and commit as public. Use `REPLACE_WITH_*` placeholders
+  for deployment-specific strings in Terraform example inputs, including account
+  and hosted-zone IDs, bucket names, resource prefixes, hostnames, public IPs,
+  local profile names and GitHub OIDC subjects. Synthetic tests use reserved
+  example domains/IPs and fictional identifiers.
+- Keep actual operator configuration and verification evidence in ignored local
+  files or an explicitly requested private destination. Apply this rule to docs,
+  issue comments, fixtures, logs and generated artifacts as well as example files.
+- Before committing, inspect the complete staged diff for deployment metadata
+  and run `uv run --frozen python scripts/check-public-config.py --staged`.
+  Commit only after every public example passes and deployment values are absent
+  from the staged changes. A value being non-secret does not make it suitable for
+  inclusion in a reusable public example.
+
 ## Versions and dependencies
 
 - Use the latest stable Python release and the latest stable versions of tools and dependencies when setting up the projects or adding or upgrading dependencies. Verify current releases against official sources at that time.
